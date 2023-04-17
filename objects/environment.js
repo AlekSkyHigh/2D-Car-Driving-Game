@@ -6,7 +6,8 @@ export default class Environment extends Object {
 
     constructor() {
         super();
-        this.$listen({ assets: ['loaded'] })
+        this.$listen({ assets: ['loaded'], car: ['out', 'in'] });
+        this.speed = options.environmentSpeed;
     }
 
     assets_loaded(assets) {
@@ -16,5 +17,18 @@ export default class Environment extends Object {
         environment.height = 1600;
         this.environment.addChild(environment);
         this.model = environment;
+    }
+
+    car_out() {
+        this.speed = options.environmentOutSpeed;
+    }
+
+    car_in() {
+        this.speed = options.environmentSpeed;
+    }
+
+    update(delta) {
+        this.model.tilePosition.y += this.speed * delta;
+
     }
 }

@@ -6,7 +6,8 @@ export default class Road extends Object {
 
     constructor() {
         super();
-        this.$listen({ assets: ['loaded'] })
+        this.$listen({ assets: ['loaded'], car: ['out', 'in'] })
+        this.speed = options.roadSpeed;
     }
 
     assets_loaded(assets) {
@@ -19,5 +20,18 @@ export default class Road extends Object {
         road.height = 1600;
         this.road.addChild(road);
         this.model = road;
+    }
+
+    car_out() {
+        this.speed = options.roadOutSPeed;
+    }
+
+    car_in() {
+        this.speed = options.roadSpeed;
+    }
+
+    update(delta) {
+        this.model.tilePosition.y += this.speed * delta;
+
     }
 }

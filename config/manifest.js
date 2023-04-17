@@ -14,6 +14,14 @@ export default {
                 {
                     name: 'carPlayer',
                     srcs: './images/lamborghini-min.png'
+                },
+                {
+                    name: 'randomCarTurk',
+                    srcs: './images/random-car-turk-min.png'
+                },
+                {
+                    name: 'randomCarPink',
+                    srcs: './images/random-car-pink-min.png'
                 }
             ],
         },

@@ -10,6 +10,7 @@ export default class CarPlayer extends Car {
     constructor() {
         super()
         this.$listen({ assets: ['loaded'], game: ['start'] })
+        this.speed = options.carSpeed
     }
 
     assets_loaded(assets) {
@@ -21,7 +22,9 @@ export default class CarPlayer extends Car {
         carPlayer.position.set(400, 500);
         this.carPlayer.addChild(carPlayer);
         this.model = carPlayer;
+        this.body = {x: carPlayer.position.x, y: carPlayer.position.y, width: carPlayer.width, height: carPlayer.height};
         this.road = new Rectangle(this.app.screen.width / 4, 0, this.app.screen.width / 2, this.app.screen.height);
+        // console.log(this.model.width); 160
     }
 
     game_start() {
@@ -39,7 +42,7 @@ export default class CarPlayer extends Car {
         } else if (event.key === "ArrowDown") {
             moves.down = true;
         }
-        console.log('pressed');
+
     }
 
     onKeyUp(event) {
@@ -61,24 +64,34 @@ export default class CarPlayer extends Car {
         const { road } = this;
 
         if (moves.up) {
-            newY = car.position.y - options.carSpeed;
+            newY = car.position.y - this.speed;
         }
         if (moves.left) {
-            newX = car.position.x - options.carSpeed;
+            newX = car.position.x - this.speed;
         }
         if (moves.right) {
-            newX = car.position.x += options.carSpeed;
+            newX = car.position.x += this.speed;
         }
         if (moves.down) {
-            newY = car.position.y += options.carSpeed;
+            newY = car.position.y += this.speed;
         }
 
         if (newX !== null) {
-            car.position.x = clamp(newX, road.x - 5, road.x + road.width);
+            this.body.x = car.position.x = clamp(newX, road.x - 5, road.x + road.width);
         };
         if (newY !== null) {
-            car.position.y = clamp(newY, road.y, road.y + road.height);
+            this.body.y = car.position.y = clamp(newY, road.y, road.y + road.height);
         };
+
+        const direction = this.app.screen.width / 2 > this.body.x ? 1 : - 1;
+        
+        if (!road.contains(this.body.x - (this.body.width / 4) * direction, this.body.y, this.body.width, this.body.height)) {
+            this.speed = options.carOutSpeed;
+            this.$emit('car_out');
+        } else {
+            this.speed = options.carSpeed;
+            this.$emit('car_in');
+        }
     }
 
 }
